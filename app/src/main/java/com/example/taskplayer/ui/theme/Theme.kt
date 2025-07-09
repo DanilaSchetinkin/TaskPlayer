@@ -61,8 +61,15 @@ val LocalMediaColors = staticCompositionLocalOf {
 }
 
 val mediafontFamily = FontFamily(
-    Font(R.font.Alegreya_Black, FontWeight.W500),
-    Font(R.font.Alegreya_Regular, FontWeight.W400)
+    Font(R.font.alegreya_extra_bold, FontWeight.W500),
+)
+
+val sansMediaFontFamily = FontFamily(
+    Font(R.font.alegreya_regular, FontWeight.W400)
+)
+
+val sansMediaFontFamily500 = FontFamily(
+    Font(R.font.alegreya_bold, FontWeight.W500)
 )
 
 @Composable
@@ -77,23 +84,30 @@ fun MediaTheme( content: @Composable ()-> Unit){
         alegreyaBoldStart = TextStyle(fontFamily = mediafontFamily, fontWeight = FontWeight.W500, fontSize = 34.sp),
         alegreyaBoldTittle = TextStyle(fontFamily = mediafontFamily, fontWeight = FontWeight.W500, fontSize = 30.sp),
         alegreya25 = TextStyle(fontFamily = mediafontFamily, fontWeight = FontWeight.W500, fontSize = 25.sp ),
-        alegreyaSans25 = TextStyle(fontFamily = mediafontFamily, fontWeight = FontWeight.W500, fontSize = 25.sp),
-        alegreyaSans22 = TextStyle(fontFamily = mediafontFamily, fontWeight = FontWeight.W400, fontSize = 22.sp),
-        alegreyaSans20 = TextStyle(fontFamily = mediafontFamily, fontWeight = FontWeight.W500, fontSize = 20.sp),
-        alegreyaSans20400 = TextStyle(fontFamily = mediafontFamily, fontWeight = FontWeight.W400, fontSize = 20.sp),
-        alegreyaSans18 = TextStyle(fontFamily = mediafontFamily, fontWeight = FontWeight.W400, fontSize = 18.sp),
-        alegreyaSans15 = TextStyle(fontFamily = mediafontFamily, fontWeight = FontWeight.W500, fontSize = 15.sp),
-        alegreyaSans12 = TextStyle(fontFamily = mediafontFamily, fontWeight = FontWeight.W400, fontSize = 12.sp)
+        alegreyaSans25 = TextStyle(fontFamily = sansMediaFontFamily500, fontWeight = FontWeight.W500, fontSize = 25.sp),
+        alegreyaSans22 = TextStyle(fontFamily = sansMediaFontFamily, fontWeight = FontWeight.W400, fontSize = 22.sp),
+        alegreyaSans20 = TextStyle(fontFamily = sansMediaFontFamily500, fontWeight = FontWeight.W500, fontSize = 20.sp),
+        alegreyaSans20400 = TextStyle(fontFamily = sansMediaFontFamily, fontWeight = FontWeight.W400, fontSize = 20.sp),
+        alegreyaSans18 = TextStyle(fontFamily = sansMediaFontFamily, fontWeight = FontWeight.W400, fontSize = 18.sp),
+        alegreyaSans15 = TextStyle(fontFamily = sansMediaFontFamily500, fontWeight = FontWeight.W500, fontSize = 15.sp),
+        alegreyaSans12 = TextStyle(fontFamily = sansMediaFontFamily, fontWeight = FontWeight.W400, fontSize = 12.sp)
     )
 
-    CompositionLocalProvider() {
-        LocalMediaColors provides mediaColors
+    CompositionLocalProvider(
+        LocalMediaColors provides mediaColors,
+        LocalMediaTypography provides mediaTypography)
+    {
+        content()
     }
-    content()
+
 }
 
 object MediaTheme{
     val colors: MediaColors
     @Composable
     get() = LocalMediaColors.current
+
+    val  typography: MediaTextStyle
+    @Composable
+    get() = LocalMediaTypography.current
 }
