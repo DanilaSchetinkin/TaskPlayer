@@ -31,12 +31,15 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.taskplayer.R
+import com.example.taskplayer.common.CommonButton
+import com.example.taskplayer.component.AuthButton
 import com.example.taskplayer.ui.theme.LightGreen
 import com.example.taskplayer.ui.theme.MediaTheme
 import com.example.taskplayer.ui.theme.mediafontFamily
 
 @Composable
 fun HelloScreen(){
+    //задник
         Image(
             painter = painterResource(R.drawable.forest_les),
             contentDescription = null,
@@ -54,16 +57,14 @@ fun HelloScreen(){
             Spacer(modifier = Modifier.height(130.dp))
 
             Box(modifier = Modifier.size(width = 191.dp, height = 199.dp)) {
+                //лого
                 Icon(
-
                     modifier = Modifier.fillMaxSize(),
                     painter = painterResource(R.drawable.logo),
                     contentDescription = null,
-
-
                     )
-
             }
+                //Вступительный текст
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
@@ -81,13 +82,11 @@ fun HelloScreen(){
             }
 
             Spacer(modifier = Modifier.height(120.dp) )
-                Button(
-                    onClick = {},
-                    modifier = Modifier.width(321.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = LightGreen),
-                    shape = RoundedCornerShape(10.dp)
+            //кнопка и ссылка
+                AuthButton(
+                    onClick = {}
                 ) {
-                    Text(text = "Войти в аккаунт", style = MediaTheme.typography.alegreyaSans25)
+                    Text("Войти в аккаунт", style = MediaTheme.typography.alegreyaSans25)
                 }
 
                 Row(modifier = Modifier.padding(top = 20.dp)) {

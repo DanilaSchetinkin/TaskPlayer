@@ -19,7 +19,8 @@ import org.jetbrains.annotations.Blocking
 data class MediaColors(
     val block: Color,
     val text: Color,
-    val hint: Color
+    val hint: Color,
+    val knopka: Color
 )
 
 @Immutable
@@ -56,7 +57,8 @@ val LocalMediaColors = staticCompositionLocalOf {
     MediaColors(
         block = Color.Unspecified,
         text = Color.Unspecified,
-        hint = Color.Unspecified
+        hint = Color.Unspecified,
+        knopka = Color.Unspecified
     )
 }
 
@@ -77,7 +79,9 @@ fun MediaTheme( content: @Composable ()-> Unit){
     val mediaColors = MediaColors(
         block = Color(0xFF253334),
         text = Color(0xFFFFFFFF),
-        hint = Color(0xFFBEC2C2)
+        hint = Color(0xFFBEC2C2),
+        knopka = Color(0xFF7C9A92)
+
     )
 
     val mediaTypography = MediaTextStyle(
