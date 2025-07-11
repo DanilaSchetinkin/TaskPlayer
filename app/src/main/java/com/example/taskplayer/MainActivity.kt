@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.taskplayer.screen.HelloScreen
 import com.example.taskplayer.screen.LoadScreen
+import com.example.taskplayer.screen.SignInScreen.SignInScreen
 import com.example.taskplayer.ui.theme.MediaTheme
 
 
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MediaTheme {
-                HelloScreen()
+                SignInScreen()
             }
         }
     }
