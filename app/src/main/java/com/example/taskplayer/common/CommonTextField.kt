@@ -29,17 +29,17 @@ fun CommonTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     supportingText: @Composable () -> Unit = {},
     placeholder: @Composable () -> Unit = {}
-){
+) {
     val interaction = remember { MutableInteractionSource() }
     BasicTextField(
         value = value,
-        onValueChange = {onChangeValue(it)},
+        onValueChange = { onChangeValue(it) },
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(14.dp))
             .background(LightGreen),
         visualTransformation = visualTransformation
-    ){ innerTextField ->
+    ) { innerTextField ->
         TextFieldDefaults.DecorationBox(
             value = value,
             singleLine = true,
@@ -48,7 +48,7 @@ fun CommonTextField(
             visualTransformation = visualTransformation,
             interactionSource = interaction,
             isError = isError,
-            supportingText = if(isError) supportingText else null,
+            supportingText = supportingText,
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = LightGreen,
                 disabledContainerColor = LightGreen,
@@ -59,7 +59,7 @@ fun CommonTextField(
                 disabledIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Red
             ),
-        placeholder = placeholder
+            placeholder = placeholder
         )
 
 

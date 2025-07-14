@@ -9,14 +9,12 @@ class SignInViewModel: ViewModel(){
         private set
 
     val emailHasError = derivedStateOf {
-        if (signInState.value.email.isEmpty())
-            return@derivedStateOf
-        false
+        signInState.value.emailTouched &&
         !android.util.Patterns.EMAIL_ADDRESS.matcher(signInState.value.email).matches()
     }
 
     fun setEmail(email: String){
-        signInState.value = signInState.value.copy(email = email)
+        signInState.value = signInState.value.copy(email = email, emailTouched = true)
     }
     fun  setPassword(password: String){
         signInState.value = signInState.value.copy(password = password)
