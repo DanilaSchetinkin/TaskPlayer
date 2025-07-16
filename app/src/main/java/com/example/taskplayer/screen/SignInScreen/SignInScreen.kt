@@ -34,9 +34,7 @@ import com.example.taskplayer.ui.theme.MediaTheme
 fun SignInScreen() {
     val signInViewModel: SignInViewModel = viewModel()
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        containerColor = DarkGreen,
-        topBar = {
+        modifier = Modifier.fillMaxSize(), containerColor = DarkGreen, topBar = {
             Column() {
                 Row(
                     modifier = Modifier
@@ -78,8 +76,7 @@ fun SignInContent(
 
         Spacer(modifier = Modifier.height(80.dp))
 
-        UnderLineTextField(
-            /*modifier = Modifier.padding(horizontal = 20.dp),*/
+        UnderLineTextField(/*modifier = Modifier.padding(horizontal = 20.dp),*/
             value = signInState.value.email,
             onValueChange = { signInViewModel.setEmail(it) },
             label = "Email",
@@ -88,8 +85,7 @@ fun SignInContent(
                 if (signInViewModel.emailHasError.value) {
                     Text("Ошибка в почте")
                 }
-            }
-        )
+            })
 
         UnderLineTextField(
             /*modifier = Modifier.padding(horizontal = 20.dp),*/
@@ -104,8 +100,7 @@ fun SignInContent(
         Spacer(modifier = Modifier.height(30.dp))
 
         Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center
+            modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center
         ) {
 
             AuthButton(
@@ -120,12 +115,13 @@ fun SignInContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 16.dp),
+                .padding(bottom = 16.dp)
         ) {
 
             Text(
                 "Register",
                 style = MediaTheme.typography.alegreyaSans20400,
+                color = MediaTheme.colors.text,
                 modifier = Modifier.padding(horizontal = 20.dp)
             )
             Spacer(Modifier.height(20.dp))
@@ -133,8 +129,7 @@ fun SignInContent(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .weight(1f),
-                contentAlignment = Alignment.TopCenter
+                    .weight(1f), contentAlignment = Alignment.TopCenter
             ) {
 
 
@@ -144,9 +139,12 @@ fun SignInContent(
 
 
                     AuthButton(
-                        onClick = {}
-                    ) {
-                        Text("Профиль", style = MediaTheme.typography.alegreyaSans25)
+                        onClick = {}) {
+                        Text(
+                            "Профиль",
+                            style = MediaTheme.typography.alegreyaSans25,
+                            color = MediaTheme.colors.text
+                        )
                     }
 
 
