@@ -3,8 +3,12 @@ package com.example.taskplayer.screen.SignInScreen
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.taskplayer.data.remote.RetrofitClient
+import com.example.taskplayer.data.remote.repository.AuthRepository
 
-class SignInViewModel: ViewModel(){
+class SignInViewModel(
+    private val authRepository: AuthRepository = AuthRepository(RetrofitClient.authService)
+): ViewModel(){
     var signInState = mutableStateOf(SignInState())
         private set
 
