@@ -4,16 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.taskplayer.screen.HelloScreen
-import com.example.taskplayer.screen.LoadScreen
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.taskplayer.data.local.TokenManager
+import com.example.taskplayer.screen.OnBoarding
 import com.example.taskplayer.screen.SignInScreen.SignInScreen
+import com.example.taskplayer.screen.SplashScreen
 import com.example.taskplayer.ui.theme.MediaTheme
 
 
@@ -23,7 +20,24 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MediaTheme {
-                SignInScreen()
+                val tokenManager = TokenManager(this)
+                val navController = rememberNavController()
+
+                NavHost(
+                    navController = navController,
+                    startDestination = "splash"
+                ){
+                    composable("splash"){
+                        SplashScreen(navController, tokenManager)
+                    }
+                    composable("onboarding"){
+                        OnBoarding(navController, tokenManager)
+                    }
+                    composable("login"){
+                        SignInScreen(navController)
+                    }
+
+                }
             }
         }
     }

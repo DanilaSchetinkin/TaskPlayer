@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AuthorizationResponse(
-    val id: Int,
+    val id: String,
     val email: String,
     val nickName: String,
     val avatar: String?,
