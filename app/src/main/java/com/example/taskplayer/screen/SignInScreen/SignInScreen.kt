@@ -40,7 +40,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun SignInScreen(navController: NavController) {
+fun SignInScreen(
+    onNavigateToMain: () -> Unit,
+    navController: NavController,
+    tokenManager: TokenManager
+) {
     val context = LocalContext.current
 
 //    можно попробовать через hilt

@@ -24,7 +24,10 @@ import com.example.taskplayer.data.local.TokenManager
 import com.example.taskplayer.ui.theme.MediaTheme
 
 @Composable
-fun OnBoarding(navController: NavController, tokenManager: TokenManager) {
+fun OnBoarding(
+    onNavigateToLogin: () -> Unit,
+    tokenManager: TokenManager,
+    navController: NavController) {
     //задник
     Image(
         painter = painterResource(R.drawable.forest_les),
@@ -83,7 +86,8 @@ fun OnBoarding(navController: NavController, tokenManager: TokenManager) {
         Spacer(modifier = Modifier.height(120.dp))
         //кнопка и ссылка
         AuthButton(
-            onClick = { navController.navigate("login")}
+            onClick = { navController.navigate("login")
+                        onNavigateToLogin()}
         ) {
             Text("Войти в аккаунт", style = MediaTheme.typography.alegreyaSans25)
         }

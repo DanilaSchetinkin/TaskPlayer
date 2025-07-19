@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.android) 
     alias(libs.plugins.kotlin.compose)
-    kotlin("plugin.serialization") version "2.2.0"
+    kotlin("plugin.serialization") version "2.0.0"
 
 }
 
@@ -35,6 +35,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+        freeCompilerArgs += listOf(
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${project.buildDir.absolutePath}/compose_metrics",
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=${project.buildDir.absolutePath}/compose_metrics"
+        )
     }
     buildFeatures {
         compose = true
@@ -42,14 +48,14 @@ android {
 }
 
 dependencies {
-    implementation("com.google.dagger:hilt-android:2.50")          // Hilt
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0") // Hilt для navigation-compose
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-kotlinx-serialization:2.11.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation ("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.compose.ui:ui:1.6.4")
+    implementation("androidx.compose.material3:material3:1.2.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -58,7 +64,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.navigation.compose.jvmstubs)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

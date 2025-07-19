@@ -13,7 +13,11 @@ import com.example.taskplayer.data.local.TokenManager
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(navController: NavController, tokenManager: TokenManager) {
+fun SplashScreen(
+    onNavigateToMain: () -> Unit,
+    onNavigateToLogin: () -> Unit,
+    onNavigateToOnboarding: () -> Unit,
+    tokenManager: TokenManager) {
     Box(modifier = Modifier.fillMaxSize()) {
         // задник
         Image(
@@ -32,15 +36,12 @@ fun SplashScreen(navController: NavController, tokenManager: TokenManager) {
     LaunchedEffect(Unit) {
         delay(4000)
 
-        navController.navigate(
+
             when {
-                tokenManager.isLoggedIn() -> "main"
-                tokenManager.isOnboardingShown() -> "login"
-                else -> "onboarding"
+                tokenManager.isLoggedIn() -> onNavigateToMain
+                tokenManager.isOnboardingShown() -> onNavigateToLogin
+                else -> onNavigateToOnboarding
             }
-        ) {
-            popUpTo("splash") { inclusive = true }
-        }
 
     }
 
