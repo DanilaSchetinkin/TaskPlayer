@@ -1,5 +1,6 @@
 package com.example.taskplayer.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,14 +35,25 @@ fun SplashScreen(
         )
     }
     LaunchedEffect(Unit) {
-        delay(4000)
+        try {
+            delay(2000)
+            Log.d("SplashScreen", "Checking login and onboarding status...")
 
+            val isLoggedIn = tokenManager.isLoggedIn()
+            val isOnboardingShown = tokenManager.isOnboardingShown()
 
+            Log.d(
+                "SplashScreen",
+                "isLoggedIn = $isLoggedIn, isOnboardingShown = $isOnboardingShown"
+            )
             when {
-                tokenManager.isLoggedIn() -> onNavigateToMain
-                tokenManager.isOnboardingShown() -> onNavigateToLogin
-                else -> onNavigateToOnboarding
+                tokenManager.isLoggedIn() -> onNavigateToMain()
+                tokenManager.isOnboardingShown() -> onNavigateToLogin()
+                else -> onNavigateToOnboarding()
             }
+        } catch (e: Exception) {
+            Log.e("SplashScreen", "Ошибка: ${e.message}", e)
+        }
 
     }
 

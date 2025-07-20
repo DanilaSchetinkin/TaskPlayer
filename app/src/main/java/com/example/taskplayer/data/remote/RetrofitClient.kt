@@ -9,7 +9,7 @@ import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 
 object RetrofitClient {
-    private const val URL = "http://mskko2021.mad.hakta.pro/api"
+    private const val URL = "http://mskko2021.mad.hakta.pro/api/"
     private val retrofit = Retrofit.Builder()
         .baseUrl(URL)
         .addConverterFactory(Json.asConverterFactory("application/json; charset=UTF8".toMediaType()))

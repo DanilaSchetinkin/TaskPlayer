@@ -1,5 +1,6 @@
 package com.example.taskplayer.screen.SignInScreen
 
+import android.util.Log
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -66,6 +67,7 @@ class SignInViewModel(
             signInState.value = signInState.value.copy(
                 errorMessage = e.message ?: "Ошибка"
             )
+            Log.e("SignInViewModel", "Login failed: ${e.message}")
             return false
         }finally {
             signInState.value = signInState.value.copy(isLoading = false)

@@ -71,5 +71,11 @@ class TokenManager(private val context: Context) {
         }
     }
 
+    fun resetAllData(){
+        sharedPreferences.edit {
+            clear()
+        }
+    }
+
 
 }

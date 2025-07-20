@@ -1,5 +1,6 @@
 package com.example.taskplayer.screen.SignInScreen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -37,13 +39,14 @@ import com.example.taskplayer.ui.theme.DarkGreen
 import com.example.taskplayer.ui.theme.LightGreen
 import com.example.taskplayer.ui.theme.MediaTheme
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.launch
 
 @Composable
 fun SignInScreen(
-    onNavigateToMain: () -> Unit,
     navController: NavController,
-    tokenManager: TokenManager
+    tokenManager: TokenManager,
+    onNavigateToMain: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -55,11 +58,13 @@ fun SignInScreen(
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return SignInViewModel(
                     authRepository = AuthRepository(RetrofitClient.authService),
-                    tokenManager = TokenManager(context)
+                    tokenManager = tokenManager
                 ) as T
             }
         }
     )
+
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -86,7 +91,7 @@ fun SignInScreen(
             }
         }
     ) { paddingValues ->
-        SignInContent(paddingValues, signInViewModel, navController)
+        SignInContent(paddingValues, signInViewModel, onNavigateToMain)
     }
 }
 
@@ -94,9 +99,9 @@ fun SignInScreen(
 fun SignInContent(
     paddingValues: PaddingValues,
     signInViewModel: SignInViewModel,
-    navController: NavController
+    onNavigateToMain: () -> Unit
 ) {
-    val signInState = signInViewModel.signInState
+    val signInState by signInViewModel.signInState
     val coroutineScope = rememberCoroutineScope()
 
     Column(
@@ -106,7 +111,7 @@ fun SignInContent(
         Spacer(modifier = Modifier.height(80.dp))
 
         UnderLineTextField(
-            value = signInState.value.email,
+            value = signInState.email,
             onValueChange = { signInViewModel.setEmail(it) },
             label = "Email",
             isError = signInViewModel.emailHasError.value,
@@ -118,11 +123,19 @@ fun SignInContent(
         )
 
         UnderLineTextField(
-            value = signInState.value.password,
+            value = signInState.password,
             onValueChange = { signInViewModel.setPassword(it) },
             isError = false,
             label = "Пароль",
         )
+
+        if (signInState.errorMessage != null){
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(text = signInState.errorMessage!!,
+                color = Color.Red
+            )
+        }
+
 
         Spacer(modifier = Modifier.height(30.dp))
 
@@ -133,10 +146,11 @@ fun SignInContent(
             AuthButton(
                 onClick = {
                     coroutineScope.launch {
-                        if (signInViewModel.login()) {
-                            navController.navigate("main") {
-                                popUpTo("login") { inclusive = true }
-                            }
+                        val result = signInViewModel.login()
+                        Log.d("SignInScreen", "Login result = $result")
+                        if (result) {
+                            Log.d("SignInScreen", "Navigating to Main")
+                           onNavigateToMain()
                         }
                     }
                 }

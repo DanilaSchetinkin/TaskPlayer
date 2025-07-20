@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation() {
     val navController = rememberNavController()
     val context = LocalContext.current
-    requireNotNull(context) { "Context не может быть null!" }
+//    requireNotNull(context) { "Context не может быть null!" }
     val tokenManager = remember { TokenManager(context) }
 
     NavHost(
@@ -73,12 +73,12 @@ fun AppNavigation() {
         composable("login") {
             SignInScreen(
                 navController = navController,
+                tokenManager = tokenManager,
                 onNavigateToMain = {
                     navController.navigate("main") {
                         popUpTo("login") { inclusive = true }
                     }
-                },
-                tokenManager = tokenManager
+                }
             )
         }
 
