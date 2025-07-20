@@ -12,7 +12,9 @@ class SignInViewModel(
     private val authRepository: AuthRepository = AuthRepository(RetrofitClient.authService),
     private val tokenManager: TokenManager
 ): ViewModel(){
-    var signInState = mutableStateOf(SignInState())
+    var signInState = mutableStateOf(SignInState(
+        email = tokenManager.getLastEmail() ?: "")
+    )
         private set
 
     val emailHasError = derivedStateOf {
