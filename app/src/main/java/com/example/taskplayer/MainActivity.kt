@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.taskplayer.data.local.TokenManager
 import com.example.taskplayer.screen.*
+import com.example.taskplayer.screen.MainScreen.MainScreen
 import com.example.taskplayer.screen.SignInScreen.SignInScreen
 import com.example.taskplayer.ui.theme.MediaTheme
 
