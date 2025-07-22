@@ -185,7 +185,7 @@ fun SignInContent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     AuthButton(
-                        onClick = { /* TODO: Добавить навигацию */ }
+                        onClick = { /*  Добавить навигацию */ }
                     ) {
                         Text(
                             "Профиль",

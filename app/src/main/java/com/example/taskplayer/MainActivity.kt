@@ -85,6 +85,7 @@ fun AppNavigation() {
 
         composable("main") {
             MainScreen(
+                navController = navController,
                 tokenManager = tokenManager
             )
         }
