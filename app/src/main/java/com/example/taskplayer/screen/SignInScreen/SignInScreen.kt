@@ -50,14 +50,14 @@ fun SignInScreen(
 ) {
     val context = LocalContext.current
 
-//    можно попробовать через hilt
+//     hilt???
 
     val signInViewModel: SignInViewModel = viewModel(
         factory = object :ViewModelProvider.Factory{
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return SignInViewModel(
-                    authRepository = AuthRepository(RetrofitClient.authService),
+                    authRepository = AuthRepository(RetrofitClient.authService, tokenManager),
                     tokenManager = tokenManager
                 ) as T
             }

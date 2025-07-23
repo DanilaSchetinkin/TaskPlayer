@@ -9,9 +9,10 @@ import com.example.taskplayer.data.remote.RetrofitClient
 import com.example.taskplayer.data.remote.repository.AuthRepository
 
 class SignInViewModel(
-    private val authRepository: AuthRepository = AuthRepository(RetrofitClient.authService),
-    private val tokenManager: TokenManager
-): ViewModel(){
+    private val tokenManager: TokenManager,
+    private val authRepository: AuthRepository = AuthRepository(RetrofitClient.authService, tokenManager ),
+
+    ): ViewModel(){
     var signInState = mutableStateOf(SignInState(
         email = tokenManager.getLastEmail() ?: "")
     )
