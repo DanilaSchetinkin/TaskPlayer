@@ -113,12 +113,18 @@ fun MainScreen(tokenManager: TokenManager, navController: NavController) {
                     }
                 })
         }) { paddingValues ->
-        MainScreenContent(paddingValues, nickname,viewModel,tokenManager , quotesViewModel)
+        MainScreenContent(paddingValues, nickname, viewModel, tokenManager, quotesViewModel)
     }
 }
 
 @Composable
-fun MainScreenContent(paddingValues: PaddingValues, nickname: String, viewModel: FeelingsViewModel,tokenManager: TokenManager, quotesViewModel: QuotesViewModel) {
+fun MainScreenContent(
+    paddingValues: PaddingValues,
+    nickname: String,
+    viewModel: FeelingsViewModel,
+    tokenManager: TokenManager,
+    quotesViewModel: QuotesViewModel
+) {
 
     val feelings by viewModel.feelings.collectAsState()
     val quotes by quotesViewModel.quotes.collectAsState()
@@ -161,7 +167,7 @@ fun MainScreenContent(paddingValues: PaddingValues, nickname: String, viewModel:
 //            }
 //        }
 
-        LazyRow{
+        LazyRow {
             items(feelings) { feeling ->
                 FeelingItem(feeling = feeling)
             }
@@ -170,9 +176,11 @@ fun MainScreenContent(paddingValues: PaddingValues, nickname: String, viewModel:
         Spacer(modifier = Modifier.height(10.dp))
 
         LazyColumn(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
-        ){
-            items(quotes){ quote ->
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
+        ) {
+            items(quotes) { quote ->
                 QuotesItem(quotes = quote)
                 Spacer(modifier = Modifier.height(16.dp))
             }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
@@ -24,7 +25,9 @@ fun BottomBar(
 ){
     Row(horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()) {
+        modifier = Modifier
+            .padding(bottom = 30.dp)
+            .fillMaxWidth()) {
 
         bottomNavItem.forEach { item ->
             val isSelected = item.route == currentRoute

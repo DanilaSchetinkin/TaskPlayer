@@ -4,10 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -19,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.example.taskplayer.component.MainButton
 import com.example.taskplayer.data.remote.auth.QuotesResponse
 import com.example.taskplayer.ui.theme.BlockButton
 import com.example.taskplayer.ui.theme.MediaTheme
@@ -47,7 +50,7 @@ fun QuotesItem(quotes: QuotesResponse) {
 
                     Text(
                         text = quotes.title,
-                        style = MediaTheme.typography.alegreyaBoldTittle,
+                        style = MediaTheme.typography.alegreya25,
 
                         )
 
@@ -59,16 +62,16 @@ fun QuotesItem(quotes: QuotesResponse) {
                 AsyncImage(
                     model = quotes.image,
                     contentDescription = quotes.title,
-                    modifier = Modifier.width(100.dp).height(100.dp)
+                    modifier = Modifier.width(166.dp).height(111.dp)
                 )
             }
 
-            Button(
+
+            MainButton(
                 onClick = {},
                 modifier = Modifier
-                    .padding(top = 8.dp)
-                    .align(Alignment.Start),
-                shape = RoundedCornerShape(8.dp),
+                    .padding(top = 10.dp)
+                    .align(Alignment.Start)
             ) {
                 Text(text = "подробнее",
                     style = MediaTheme.typography.alegreyaSans15,

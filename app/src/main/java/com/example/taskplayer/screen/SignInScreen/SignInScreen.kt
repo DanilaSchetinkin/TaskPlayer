@@ -53,7 +53,7 @@ fun SignInScreen(
 //     hilt???
 
     val signInViewModel: SignInViewModel = viewModel(
-        factory = object :ViewModelProvider.Factory{
+        factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return SignInViewModel(
@@ -129,9 +129,10 @@ fun SignInContent(
             label = "Пароль",
         )
 
-        if (signInState.errorMessage != null){
+        if (signInState.errorMessage != null) {
             Spacer(modifier = Modifier.height(12.dp))
-            Text(text = signInState.errorMessage!!,
+            Text(
+                text = signInState.errorMessage!!,
                 color = Color.Red
             )
         }
@@ -150,7 +151,7 @@ fun SignInContent(
                         Log.d("SignInScreen", "Login result = $result")
                         if (result) {
                             Log.d("SignInScreen", "Navigating to Main")
-                           onNavigateToMain()
+                            onNavigateToMain()
                         }
                     }
                 }
