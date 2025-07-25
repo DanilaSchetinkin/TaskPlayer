@@ -10,38 +10,44 @@ import com.example.taskplayer.data.remote.repository.AuthRepository
 
 class SignInViewModel(
     private val tokenManager: TokenManager,
-    private val authRepository: AuthRepository = AuthRepository(RetrofitClient.authService, tokenManager ),
+    private val authRepository: AuthRepository = AuthRepository(
+        RetrofitClient.authService,
+        tokenManager
+    ),
 
-    ): ViewModel(){
-    var signInState = mutableStateOf(SignInState(
-        email = tokenManager.getLastEmail() ?: "")
+    ) : ViewModel() {
+    var signInState = mutableStateOf(
+        SignInState(
+            email = tokenManager.getLastEmail() ?: ""
+        )
     )
         private set
 
     val emailHasError = derivedStateOf {
         signInState.value.emailTouched &&
-        !android.util.Patterns.EMAIL_ADDRESS.matcher(signInState.value.email).matches()
+                !android.util.Patterns.EMAIL_ADDRESS.matcher(signInState.value.email).matches()
     }
 
-    fun setEmail(email: String){
-        signInState.value = signInState.value.copy(email = email, emailTouched = true, errorMessage = null)
+    fun setEmail(email: String) {
+        signInState.value =
+            signInState.value.copy(email = email, emailTouched = true, errorMessage = null)
     }
-    fun  setPassword(password: String){
+
+    fun setPassword(password: String) {
         signInState.value = signInState.value.copy(password = password)
     }
 
 
+    suspend fun login(): Boolean {
 
-    suspend fun login(): Boolean{
-
-        if (signInState.value.email.isBlank() || signInState.value.password.isBlank()){
+        if (signInState.value.email.isBlank() || signInState.value.password.isBlank()) {
             signInState.value = signInState.value.copy(
                 errorMessage = "Заполните все поля"
             )
             return false
         }
 
-        if (emailHasError.value){
+        if (emailHasError.value) {
             signInState.value = signInState.value.copy(
                 errorMessage = "Некорректный email"
             )
@@ -58,7 +64,7 @@ class SignInViewModel(
 
             tokenManager.saveAuthData(
                 token = response.token,
-                 userId = response.id,
+                userId = response.id,
                 nickName = response.nickName,
                 avatar = response.avatar,
                 email = response.email
@@ -72,7 +78,7 @@ class SignInViewModel(
             )
             Log.e("SignInViewModel", "Login failed: ${e.message}")
             return false
-        }finally {
+        } finally {
             signInState.value = signInState.value.copy(isLoading = false)
         }
 

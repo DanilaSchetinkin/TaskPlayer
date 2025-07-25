@@ -22,23 +22,26 @@ import androidx.compose.ui.unit.dp
 fun BottomBar(
     currentRoute: String?,
     onItemClick: (String) -> Unit
-){
-    Row(horizontalArrangement = Arrangement.SpaceAround,
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(bottom = 30.dp)
-            .fillMaxWidth()) {
+            .fillMaxWidth()
+    ) {
 
         bottomNavItem.forEach { item ->
             val isSelected = item.route == currentRoute
             val icon = if (isSelected) item.selectedIcon else item.unselectedIcon
 
-            Box(contentAlignment = Alignment.Center,
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .size(48.dp)
                     .clickable(
-                    onClick = { onItemClick(item.route) }
-                )){
+                        onClick = { onItemClick(item.route) }
+                    )) {
                 Image(
                     painter = painterResource(id = icon),
                     contentDescription = item.route,

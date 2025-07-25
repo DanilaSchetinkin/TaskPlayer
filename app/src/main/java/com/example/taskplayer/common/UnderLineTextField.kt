@@ -16,7 +16,7 @@ fun UnderLineTextField(
     modifier: Modifier = Modifier,
     isError: Boolean = false,
     supportingText: @Composable (() -> Unit)? = null
-){
+) {
     TextField(
         value = value,
         onValueChange = onValueChange,

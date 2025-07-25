@@ -18,7 +18,8 @@ fun SplashScreen(
     onNavigateToMain: () -> Unit,
     onNavigateToLogin: () -> Unit,
     onNavigateToOnboarding: () -> Unit,
-    tokenManager: TokenManager) {
+    tokenManager: TokenManager
+) {
     Box(modifier = Modifier.fillMaxSize()) {
         // задник
         Image(

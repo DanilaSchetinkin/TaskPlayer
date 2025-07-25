@@ -13,19 +13,19 @@ import java.util.concurrent.TimeUnit
 object RetrofitClient {
     private const val URL = "http://mskko2021.mad.hakta.pro/api/"
 
-    private val json = Json{
+    private val json = Json {
         ignoreUnknownKeys = true
     }
 
-    private val loggingInterceptor = HttpLoggingInterceptor().apply{
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
-        .connectTimeout(15,TimeUnit.SECONDS)
-        .readTimeout(15,TimeUnit.SECONDS)
-        .writeTimeout(15,TimeUnit.SECONDS)
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(15, TimeUnit.SECONDS)
+        .writeTimeout(15, TimeUnit.SECONDS)
         .build()
 
 

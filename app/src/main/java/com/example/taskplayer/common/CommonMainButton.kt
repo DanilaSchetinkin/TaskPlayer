@@ -15,7 +15,7 @@ fun CommonMainButtom(
     buttonColors: ButtonColors,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
-){
+) {
     Button(
         modifier = Modifier
             .width(138.dp)

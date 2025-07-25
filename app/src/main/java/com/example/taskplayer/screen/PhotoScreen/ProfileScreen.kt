@@ -106,9 +106,9 @@ fun ProfileScreenContent(
     navController: NavController
 ) {
     val context = LocalContext.current
-    val gallery = remember { mutableStateListOf<String>() }
+    val gallery = remember { mutableStateListOf<GalleryItem>() }
 
-    // Галерея из SharedPreferences
+
     LaunchedEffect(Unit) {
         gallery.clear()
         gallery.addAll(tokenManager.getGallery())
@@ -120,15 +120,15 @@ fun ProfileScreenContent(
     ) { uri: Uri? ->
         uri?.let {
             val savedPath = saveImageToInternalStorage(context, uri)
-            if (savedPath != null) {
-                gallery.add(savedPath)
+            savedPath?.let { path ->
+                val newItem = GalleryItem(path)
+                gallery.add(newItem)
                 tokenManager.saveGallery(gallery)
             }
         }
     }
 
     Column(modifier = Modifier.padding(paddingValues)) {
-        // Аватар и ник
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             MainAvatar(
                 tokenManager = tokenManager,
@@ -155,15 +155,15 @@ fun ProfileScreenContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.padding(8.dp)
         ) {
-            items(gallery) { path ->
+            items(gallery) { item ->
                 Box(
                     modifier = Modifier
                         .clickable {
-                            navController.navigate("photo_screen/$path")
+                            navController.navigate("photo_screen/${item.path}")
                         }
                 ) {
-                    val imageBitmap = remember(path) {
-                        loadBitmapFromStorage(path)
+                    val imageBitmap = remember(item.path) {
+                        loadBitmapFromStorage(item.path)
                     }
                     imageBitmap?.let {
                         Image(

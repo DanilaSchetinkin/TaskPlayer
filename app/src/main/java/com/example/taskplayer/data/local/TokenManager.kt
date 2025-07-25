@@ -3,12 +3,16 @@ package com.example.taskplayer.data.local
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.example.taskplayer.screen.PhotoScreen.GalleryItem
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class TokenManager(private val context: Context) {
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+    private val gson = Gson()
 
-    companion object{
+    companion object {
         private const val KEY_TOKEN = "auth_token"
         private const val KEY_USER_ID = "user_id"
         private const val KEY_NICK_NAME = "nick_name"
@@ -19,7 +23,13 @@ class TokenManager(private val context: Context) {
         private const val KEY_ONBOARDING_SHOWN = "onboarding_shown"
     }
 
-    fun saveAuthData(token: String, userId: String, email: String, nickName: String, avatar: String?){
+    fun saveAuthData(
+        token: String,
+        userId: String,
+        email: String,
+        nickName: String,
+        avatar: String?
+    ) {
         sharedPreferences.edit {
             putString(KEY_TOKEN, token)
             putString(KEY_USER_ID, userId)
@@ -40,19 +50,21 @@ class TokenManager(private val context: Context) {
     fun getLastEmail(): String? = sharedPreferences.getString(KEY_LAST_EMAIL, null)
 
 
-    fun saveGallery(photos: List<String>){
+    fun saveGallery(gallery: List<GalleryItem>) {
+        val jsonString = gson.toJson(gallery)
         sharedPreferences.edit {
-            putStringSet(KEY_GALLERY,photos.toSet())
+            putString(KEY_GALLERY, jsonString)
         }
     }
 
-    fun getGallery():List<String>{
-        return sharedPreferences.getStringSet(KEY_GALLERY, emptySet())?.toList()?:
-        emptyList()
+    fun getGallery(): List<GalleryItem> {
+        val jsonString = sharedPreferences.getString(KEY_GALLERY, null) ?: return emptyList()
+        val type = object : TypeToken<List<GalleryItem>>() {}.type
+        return gson.fromJson(jsonString, type) ?: emptyList()
     }
 
 
-    fun clearAuthData(){
+    fun clearAuthData() {
         sharedPreferences.edit {
             remove(KEY_TOKEN)
             remove(KEY_USER_ID)
@@ -61,17 +73,18 @@ class TokenManager(private val context: Context) {
         }
     }
 
-    fun isOnboardingShown(): Boolean{
+    fun isOnboardingShown(): Boolean {
         return sharedPreferences.getBoolean(KEY_ONBOARDING_SHOWN, false)
     }
 
-    fun setOnboardingShown(){
+    fun setOnboardingShown() {
         sharedPreferences.edit {
             putBoolean(KEY_ONBOARDING_SHOWN, true)
         }
     }
 
-    fun resetAllData(){
+//    Временная
+    fun resetAllData() {
         sharedPreferences.edit {
             clear()
         }

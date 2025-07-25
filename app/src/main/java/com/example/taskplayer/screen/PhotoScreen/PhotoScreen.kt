@@ -37,6 +37,14 @@ fun PhotoScreen(
     // Загрузка изображения по пути
     val bitmap = remember(path) { loadBitmapFromStorage(path) }
 
+    // Функция для удаления фото
+    fun deletePhoto() {
+        deleteImage(path)
+        val updatedGallery = tokenManager.getGallery().filter { it.path != path }
+        tokenManager.saveGallery(updatedGallery)
+        navController.popBackStack()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -64,28 +72,17 @@ fun PhotoScreen(
                             val deltaX = endX - startX
 
                             when {
-                                deltaX > 150f -> {
-                                    // Свайп вправо — закрыть экран
-                                    navController.popBackStack()
-                                }
-                                deltaX < -150f -> {
-                                    // Свайп влево — удалить фото
-                                    deleteImage(path)
-                                    val updatedGallery = tokenManager.getGallery().toMutableList().apply {
-                                        remove(path)
-                                    }
-                                    tokenManager.saveGallery(updatedGallery)
-                                    navController.popBackStack()
-                                }
+                                deltaX > 150f -> navController.popBackStack() // Свайп вправо - закрыть
+                                deltaX < -150f -> deletePhoto() // Свайп влево - удалить
                             }
                         }
                     }
                 }
             }
     ) {
-        bitmap?.let {
+        if (bitmap != null) {
             Image(
-                bitmap = it.asImageBitmap(),
+                bitmap = bitmap.asImageBitmap(),
                 contentDescription = "Фото",
                 modifier = Modifier
                     .fillMaxSize()
@@ -93,11 +90,16 @@ fun PhotoScreen(
                         scaleX = scale.value,
                         scaleY = scale.value
                     ),
-                contentScale = ContentScale.Fit // по большей стороне
+                contentScale = ContentScale.Fit
+            )
+        } else {
+            Text(
+                text = "Не удалось загрузить изображение",
+                modifier = Modifier.align(Alignment.Center)
             )
         }
 
-        // Кнопка закрыть (дополнительно к свайпу)
+        // Кнопка закрыть
         Button(
             onClick = { navController.popBackStack() },
             modifier = Modifier
@@ -106,16 +108,25 @@ fun PhotoScreen(
         ) {
             Text("Закрыть")
         }
+
+        // Кнопка удалить
+        Button(
+            onClick = { deletePhoto() },
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+        ) {
+            Text("Удалить")
+        }
     }
 }
 
 // Функция для загрузки изображения из хранилища
-fun loadBitmapFromStorage(path: String): Bitmap? {
+ fun loadBitmapFromStorage(path: String): Bitmap? {
     return try {
         val file = File(path)
         if (file.exists()) {
-            val inputStream = FileInputStream(file)
-            BitmapFactory.decodeStream(inputStream)
+            BitmapFactory.decodeStream(FileInputStream(file))
         } else {
             null
         }
@@ -125,12 +136,9 @@ fun loadBitmapFromStorage(path: String): Bitmap? {
 }
 
 // Функция для удаления изображения
-fun deleteImage(path: String) {
+private fun deleteImage(path: String) {
     try {
-        val file = File(path)
-        if (file.exists()) {
-            file.delete()
-        }
+        File(path).takeIf { it.exists() }?.delete()
     } catch (e: Exception) {
         e.printStackTrace()
     }

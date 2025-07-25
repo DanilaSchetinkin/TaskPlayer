@@ -14,10 +14,10 @@ import com.example.taskplayer.R
 import com.example.taskplayer.data.local.TokenManager
 
 @Composable
-fun MainAvatar(tokenManager: TokenManager, modifier: Modifier = Modifier){
+fun MainAvatar(tokenManager: TokenManager, modifier: Modifier = Modifier) {
     val avatarUrl = tokenManager.getAvatar()
 
-    if (!avatarUrl.isNullOrEmpty()){
+    if (!avatarUrl.isNullOrEmpty()) {
         AsyncImage(
             model = avatarUrl,
             contentDescription = "Avatar",
@@ -25,7 +25,9 @@ fun MainAvatar(tokenManager: TokenManager, modifier: Modifier = Modifier){
             contentScale = ContentScale.Crop
         )
     } else {
-        Image(painter = painterResource(R.drawable.billy),
-            contentDescription = "Billy")
+        Image(
+            painter = painterResource(R.drawable.billy),
+            contentDescription = "Billy"
+        )
     }
 }

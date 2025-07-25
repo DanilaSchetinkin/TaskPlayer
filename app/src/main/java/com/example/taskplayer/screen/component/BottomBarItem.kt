@@ -1,5 +1,3 @@
-
-
 package com.example.taskplayer.screen.component
 
 import com.example.taskplayer.R

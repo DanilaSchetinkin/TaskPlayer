@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.taskplayer.data.local.TokenManager
 import com.example.taskplayer.screen.*
 import com.example.taskplayer.screen.MainScreen.MainScreen
+import com.example.taskplayer.screen.PhotoScreen.PhotoScreen
 import com.example.taskplayer.screen.PhotoScreen.ProfileScreen
 import com.example.taskplayer.screen.SignInScreen.SignInScreen
 import com.example.taskplayer.ui.theme.MediaTheme
@@ -91,11 +92,21 @@ fun AppNavigation() {
             )
         }
 
-        composable("profile"){
+        composable("profile") {
             ProfileScreen(
                 navController = navController,
                 tokenManager = tokenManager
             )
         }
+        composable("photo_screen/{path}") {
+            backStackEntry ->
+            val path = backStackEntry.arguments?.getString("path") ?: ""
+            PhotoScreen(
+                path = path,
+                navController = navController,
+                tokenManager = tokenManager
+            )
+        }
+
     }
 }

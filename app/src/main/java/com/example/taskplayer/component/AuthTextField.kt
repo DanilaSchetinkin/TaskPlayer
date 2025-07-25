@@ -13,14 +13,15 @@ import com.example.taskplayer.common.CommonTextField
 @Composable
 fun AuthTextField(
     value: String,
-    onChangeValue: (String)-> Unit,
+    onChangeValue: (String) -> Unit,
     isError: Boolean,
     supportingText: @Composable () -> Unit,
     placeholder: @Composable () -> Unit,
     label: @Composable () -> Unit
-){
+) {
     Column(
-        modifier = Modifier.padding(horizontal = 20.dp)
+        modifier = Modifier
+            .padding(horizontal = 20.dp)
             .wrapContentSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {

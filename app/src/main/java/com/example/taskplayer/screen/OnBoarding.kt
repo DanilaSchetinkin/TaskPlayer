@@ -27,7 +27,8 @@ import com.example.taskplayer.ui.theme.MediaTheme
 fun OnBoarding(
     onNavigateToLogin: () -> Unit,
     tokenManager: TokenManager,
-    navController: NavController) {
+    navController: NavController
+) {
     //задник
     Image(
         painter = painterResource(R.drawable.forest_les),
@@ -86,8 +87,10 @@ fun OnBoarding(
         Spacer(modifier = Modifier.height(120.dp))
         //кнопка и ссылка
         AuthButton(
-            onClick = { navController.navigate("login")
-                        onNavigateToLogin()}
+            onClick = {
+                navController.navigate("login")
+                onNavigateToLogin()
+            }
         ) {
             Text("Войти в аккаунт", style = MediaTheme.typography.alegreyaSans25)
         }

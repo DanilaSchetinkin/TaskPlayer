@@ -12,7 +12,7 @@ class QuotesViewModel(private val repository: AuthRepository) : ViewModel() {
     private val _quotes = MutableStateFlow<List<QuotesResponse>>(emptyList())
     val quotes: StateFlow<List<QuotesResponse>> = _quotes
 
-    fun loadQuotes(){
+    fun loadQuotes() {
         viewModelScope.launch {
             try {
                 val result = repository.getQuotes()

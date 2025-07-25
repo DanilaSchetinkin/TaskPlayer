@@ -13,12 +13,12 @@ class FeelingsViewModel(private val repository: AuthRepository) : ViewModel() {
     private val _feelings = MutableStateFlow<List<FeelingsResponse>>(emptyList())
     val feelings: StateFlow<List<FeelingsResponse>> = _feelings
 
-    fun loadFeelings(){
+    fun loadFeelings() {
         viewModelScope.launch {
             Log.d("FeelingsViewModel", "loadFeelings() called")
             try {
                 val result = repository.getFeelings()
-                Log.d("FeelingsViewModel","Loaded feelings: ${result.size}")
+                Log.d("FeelingsViewModel", "Loaded feelings: ${result.size}")
                 _feelings.value = result
             } catch (e: Exception) {
                 Log.e("FeelingsViewModel", "Error loading feelings", e)

@@ -25,18 +25,19 @@ import com.example.taskplayer.data.remote.auth.FeelingsResponse
 import com.example.taskplayer.ui.theme.MediaTheme
 
 @Composable
-fun FeelingItem(feeling: FeelingsResponse){
+fun FeelingItem(feeling: FeelingsResponse) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(horizontal = 8.dp)
 
     ) {
         Box(
-            modifier = Modifier.size(56.dp)
+            modifier = Modifier
+                .size(56.dp)
                 .clip(RoundedCornerShape(16.dp))
-            .background(Color.White),
+                .background(Color.White),
             contentAlignment = Alignment.Center
-        ){
+        ) {
             AsyncImage(
                 model = feeling.image,
                 contentDescription = feeling.title,

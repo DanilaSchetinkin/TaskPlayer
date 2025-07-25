@@ -6,7 +6,7 @@ import com.example.taskplayer.data.remote.repository.AuthRepository
 
 class FeelingsViewModelFactory(
     private val repository: AuthRepository
-) : ViewModelProvider.Factory{
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(FeelingsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

@@ -41,10 +41,12 @@ fun QuotesItem(quotes: QuotesResponse) {
             modifier = Modifier.fillMaxSize()
         )
         {
-            Row(modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
                 Column(modifier = Modifier.weight(1f)) {
 
@@ -62,7 +64,9 @@ fun QuotesItem(quotes: QuotesResponse) {
                 AsyncImage(
                     model = quotes.image,
                     contentDescription = quotes.title,
-                    modifier = Modifier.width(166.dp).height(111.dp)
+                    modifier = Modifier
+                        .width(166.dp)
+                        .height(111.dp)
                 )
             }
 
@@ -73,9 +77,11 @@ fun QuotesItem(quotes: QuotesResponse) {
                     .padding(top = 10.dp)
                     .align(Alignment.Start)
             ) {
-                Text(text = "подробнее",
+                Text(
+                    text = "подробнее",
                     style = MediaTheme.typography.alegreyaSans15,
-                    color = MediaTheme.colors.text)
+                    color = MediaTheme.colors.text
+                )
             }
 
         }
