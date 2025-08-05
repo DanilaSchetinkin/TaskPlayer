@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">taskPlayer</string>
     <string name="sign_in">Sign in</string>
+    <string name="input_email">Заполните все поля</string>
+    <string name="Uncorrect_email">Некорректный email</string>
+    <string name="Error">Ошибка</string>
+    <string name="Error_loading_data">Ошибка загрузки данных</string>
 </resources>

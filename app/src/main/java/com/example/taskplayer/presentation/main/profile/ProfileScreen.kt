@@ -34,6 +34,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import android.net.Uri
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.Bitmap
+import coil3.compose.rememberAsyncImagePainter
 import com.example.taskplayer.R
 import com.example.taskplayer.data.local.UserSessionManager
 import com.example.taskplayer.presentation.main.components.MainAvatar
@@ -42,11 +50,18 @@ import com.example.taskplayer.core.theme.DarkGreen
 import com.example.taskplayer.core.theme.MediaTheme
 import com.example.taskplayer.presentation.main.photo.GalleryItem
 import com.example.taskplayer.presentation.main.photo.loadBitmapFromStorage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 
 @Composable
-fun ProfileScreen(tokenManager: UserSessionManager, navController: NavController) {
+fun ProfileScreen(
+    tokenManager: UserSessionManager,
+    navController: NavController,
+    viewModel: ProfileViewModel = viewModel(factory = ProfileViewModelFactory(tokenManager))
+) {
     val nickname = tokenManager.getNickName()
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
@@ -56,24 +71,19 @@ fun ProfileScreen(tokenManager: UserSessionManager, navController: NavController
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 40.dp),
-
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Image(
-
                     painter = painterResource(R.drawable.tripalka),
                     contentDescription = "palki",
-                    modifier = Modifier
-                        .size(20.dp)
+                    modifier = Modifier.size(20.dp)
                 )
                 Image(
                     painter = painterResource(R.drawable.logo),
                     contentDescription = "LogoMain",
-                    modifier = Modifier
-                        .size(100.dp)
+                    modifier = Modifier.size(100.dp)
                 )
-
                 TextButton(onClick = { tokenManager.clearAuthData() }) {
                     Text(
                         text = "exit",
@@ -93,7 +103,13 @@ fun ProfileScreen(tokenManager: UserSessionManager, navController: NavController
                     }
                 })
         }) { paddingValues ->
-        ProfileScreenContent(paddingValues, tokenManager, nickname, navController)
+        ProfileScreenContent(
+            paddingValues = paddingValues,
+            tokenManager = tokenManager,
+            nickname = nickname,
+            navController = navController,
+            viewModel = viewModel
+        )
     }
 }
 
@@ -102,28 +118,19 @@ fun ProfileScreenContent(
     paddingValues: PaddingValues,
     tokenManager: UserSessionManager,
     nickname: String,
-    navController: NavController
+    navController: NavController,
+    viewModel: ProfileViewModel
 ) {
     val context = LocalContext.current
-    val gallery = remember { mutableStateListOf<GalleryItem>() }
-
-
-    LaunchedEffect(Unit) {
-        gallery.clear()
-        gallery.addAll(tokenManager.getGallery())
-    }
+    val gallery by viewModel.gallery.collectAsState()
+    /*val coroutineScope = rememberCoroutineScope()*/
 
     // Лаунчер для выбора изображения
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
-            val savedPath = saveImageToInternalStorage(context, uri)
-            savedPath?.let { path ->
-                val newItem = GalleryItem(path)
-                gallery.add(newItem)
-                tokenManager.saveGallery(gallery)
-            }
+            viewModel.addImage(context, uri)
         }
     }
 
@@ -141,13 +148,11 @@ fun ProfileScreenContent(
             Text(
                 text = nickname,
                 style = MediaTheme.typography.alegreyaBoldStart,
-                color = MediaTheme.colors.text
-            )
+                color = MediaTheme.colors.text)
         }
 
         Spacer(modifier = Modifier.size(16.dp))
 
-        // Галерея
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -161,21 +166,26 @@ fun ProfileScreenContent(
                             navController.navigate("photo_screen/${item.path}")
                         }
                 ) {
-                    val imageBitmap = remember(item.path) {
-                        loadBitmapFromStorage(item.path)
+                    var imageBitmap by remember { mutableStateOf<Bitmap?>(null) }
+
+                    LaunchedEffect(item.path) {
+                        withContext(Dispatchers.IO) {
+                            val bitmap = loadBitmapFromStorage(item.path)
+                            withContext(Dispatchers.Main) {
+                                imageBitmap = bitmap
+                            }
+                        }
                     }
+
                     imageBitmap?.let {
                         Image(
                             bitmap = it.asImageBitmap(),
                             contentDescription = null,
-                            modifier = Modifier
-                                .size(180.dp)
-                        )
+                            modifier = Modifier.size(180.dp))
                     }
                 }
             }
 
-            // Последний элемент — кнопка "+"
             item {
                 Box(
                     contentAlignment = Alignment.Center,
@@ -189,32 +199,11 @@ fun ProfileScreenContent(
                     Text(
                         text = "+",
                         style = MediaTheme.typography.alegreyaBoldStart,
-                        color = MediaTheme.colors.text
-                    )
+                        color = MediaTheme.colors.text)
                 }
             }
         }
     }
 }
-
-fun saveImageToInternalStorage(context: Context, uri: Uri): String? {
-    return try {
-        val inputStream = context.contentResolver.openInputStream(uri)
-        val fileName = "img_${System.currentTimeMillis()}.jpg"
-        val file = File(context.filesDir, fileName)
-        val outputStream = FileOutputStream(file)
-
-        inputStream?.copyTo(outputStream)
-
-        inputStream?.close()
-        outputStream.close()
-
-        file.absolutePath
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
-    }
-}
-
 
 

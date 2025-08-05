@@ -15,6 +15,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -35,6 +36,7 @@ import com.example.taskplayer.core.theme.DarkGreen
 import com.example.taskplayer.core.theme.MediaTheme
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
+import com.example.taskplayer.data.provider.AndroidResourceProvider
 import kotlinx.coroutines.launch
 
 @Composable
@@ -44,8 +46,9 @@ fun SignInScreen(
     onNavigateToMain: () -> Unit
 ) {
     val context = LocalContext.current
+    val resources = remember { AndroidResourceProvider(context) }
     val signInViewModel: SignInViewModel = viewModel(
-        factory = SignInViewModelFactory(tokenManager)
+        factory = SignInViewModelFactory(tokenManager, resources = resources)
     )
 
 

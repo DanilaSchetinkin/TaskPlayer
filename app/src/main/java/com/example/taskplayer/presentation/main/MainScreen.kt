@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -34,30 +36,26 @@ import com.example.taskplayer.data.local.UserSessionManager
 import com.example.taskplayer.data.remote.RetrofitClient
 import com.example.taskplayer.domain.repository.AuthRepository
 import com.example.taskplayer.presentation.main.feelings.FeelingItem
-import com.example.taskplayer.presentation.main.feelings.FeelingsViewModel
-import com.example.taskplayer.presentation.main.feelings.FeelingsViewModelFactory
 import com.example.taskplayer.presentation.main.quotes.QuotesItem
-import com.example.taskplayer.presentation.main.quotes.QuotesViewModel
-import com.example.taskplayer.presentation.main.quotes.QuotesViewModelFactory
 import com.example.taskplayer.presentation.main.components.BottomBar
 import com.example.taskplayer.core.theme.DarkGreen
 import com.example.taskplayer.core.theme.Grey
 import com.example.taskplayer.core.theme.MediaTheme
+import com.example.taskplayer.data.provider.AndroidResourceProvider
 import com.example.taskplayer.presentation.main.components.MainAvatar
 
 
 @Composable
 fun MainScreen(tokenManager: UserSessionManager, navController: NavController) {
-
     val context = LocalContext.current
     val nickname = tokenManager.getNickName()
     val authService = RetrofitClient.authService
     val repository = remember { AuthRepository(authService) }
-    val viewModel: FeelingsViewModel = viewModel(
-        factory = FeelingsViewModelFactory(repository)
-    )
-    val quotesViewModel: QuotesViewModel = viewModel(
-        factory = QuotesViewModelFactory(repository)
+    val resources = remember { AndroidResourceProvider(context) }
+
+
+    val viewModel: MainViewModel = viewModel(
+        factory = MainViewModelFactory(repository, resources)
     )
 
     Scaffold(
@@ -70,7 +68,6 @@ fun MainScreen(tokenManager: UserSessionManager, navController: NavController) {
                     .padding(vertical = 40.dp)
                     .padding(horizontal = 30.dp),
             ) {
-
                 Image(
                     painter = painterResource(R.drawable.tripalka),
                     contentDescription = "palki",
@@ -92,7 +89,6 @@ fun MainScreen(tokenManager: UserSessionManager, navController: NavController) {
                         .clip(CircleShape)
                         .align(Alignment.CenterEnd)
                 )
-
             }
         },
         bottomBar = {
@@ -105,7 +101,12 @@ fun MainScreen(tokenManager: UserSessionManager, navController: NavController) {
                     }
                 })
         }) { paddingValues ->
-        MainScreenContent(paddingValues, nickname, viewModel, tokenManager, quotesViewModel)
+        MainScreenContent(
+            paddingValues = paddingValues,
+            nickname = nickname,
+            viewModel = viewModel,
+
+        )
     }
 }
 
@@ -113,21 +114,16 @@ fun MainScreen(tokenManager: UserSessionManager, navController: NavController) {
 fun MainScreenContent(
     paddingValues: PaddingValues,
     nickname: String,
-    viewModel: FeelingsViewModel,
-    tokenManager: UserSessionManager,
-    quotesViewModel: QuotesViewModel
+    viewModel: MainViewModel
 ) {
-
+    // Получаем все состояния из ViewModel
     val feelings by viewModel.feelings.collectAsState()
-    val quotes by quotesViewModel.quotes.collectAsState()
+    val quotes by viewModel.quotes.collectAsState()
+    val error by viewModel.error.collectAsState()
 
-    Log.d("MainScreenContent", "MainScreenContent started")
 
     LaunchedEffect(Unit) {
-        Log.d("MainScreenContent", "Calling loadFeelings()")
-        viewModel.loadFeelings()
-        quotesViewModel.loadQuotes()
-
+        viewModel.loadData()
     }
 
     Column(
@@ -136,11 +132,24 @@ fun MainScreenContent(
             .padding(paddingValues)
             .padding(horizontal = 30.dp)
     ) {
+
+        error?.let { errorMessage ->
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            )
+        }
+
+
         Text(
             text = "С возвращением, $nickname!",
             style = MediaTheme.typography.alegreyaBoldTittle,
             color = MediaTheme.colors.text
         )
+
         Text(
             text = "Каким ты себя ощущаешь сегодня?",
             style = MediaTheme.typography.alegreyaSans20400,
@@ -149,16 +158,7 @@ fun MainScreenContent(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Log.d("MainScreenContent", "Feelings size: ${feelings.size}")
-
-
-//        Column(modifier = Modifier.fillMaxSize()) {
-//            Text("MainScreen")
-//            Button(onClick = {tokenManager.resetAllData()}  ) {
-//                Text(text = "Сброс")
-//            }
-//        }
-
+        // Список чувств
         LazyRow {
             items(feelings) { feeling ->
                 FeelingItem(feeling = feeling)
@@ -167,6 +167,7 @@ fun MainScreenContent(
 
         Spacer(modifier = Modifier.height(10.dp))
 
+        // Список цитат
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -178,5 +179,4 @@ fun MainScreenContent(
             }
         }
     }
-
 }

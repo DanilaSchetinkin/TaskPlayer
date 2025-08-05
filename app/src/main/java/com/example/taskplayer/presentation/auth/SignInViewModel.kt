@@ -4,12 +4,15 @@ import android.util.Log
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.taskplayer.R
 import com.example.taskplayer.data.local.UserSessionManager
+import com.example.taskplayer.data.provider.ResourceProvider
 import com.example.taskplayer.data.remote.RetrofitClient
 import com.example.taskplayer.domain.repository.AuthRepository
 
 class SignInViewModel(
     private val tokenManager: UserSessionManager,
+    private val resources: ResourceProvider,
     private val authRepository: AuthRepository = AuthRepository(
         RetrofitClient.authService
     ),
@@ -41,14 +44,14 @@ class SignInViewModel(
 
         if (signInState.value.email.isBlank() || signInState.value.password.isBlank()) {
             signInState.value = signInState.value.copy(
-                errorMessage = "Заполните все поля"
+                errorMessage = resources.getString(R.string.input_email)
             )
             return false
         }
 
         if (emailHasError.value) {
             signInState.value = signInState.value.copy(
-                errorMessage = "Некорректный email"
+                errorMessage = resources.getString(R.string.Uncorrect_email)
             )
             return false
         }
@@ -73,7 +76,7 @@ class SignInViewModel(
 
         } catch (e: Exception) {
             signInState.value = signInState.value.copy(
-                errorMessage = e.message ?: "Ошибка"
+                errorMessage = e.message ?: resources.getString(R.string.Error)
             )
             Log.e("SignInViewModel", "Login failed: ${e.message}")
             return false
