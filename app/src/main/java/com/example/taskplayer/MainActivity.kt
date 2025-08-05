@@ -10,18 +10,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.taskplayer.data.local.TokenManager
-import com.example.taskplayer.screen.*
-import com.example.taskplayer.screen.MainScreen.MainScreen
-import com.example.taskplayer.screen.PhotoScreen.PhotoScreen
-import com.example.taskplayer.screen.PhotoScreen.ProfileScreen
-import com.example.taskplayer.screen.SignInScreen.SignInScreen
-import com.example.taskplayer.ui.theme.MediaTheme
+import com.example.taskplayer.data.local.UserSessionManager
+import com.example.taskplayer.data.remote.RetrofitClient
+import com.example.taskplayer.presentation.main.MainScreen
+import com.example.taskplayer.presentation.main.photo.PhotoScreen
+import com.example.taskplayer.presentation.main.profile.ProfileScreen
+import com.example.taskplayer.presentation.auth.SignInScreen
+import com.example.taskplayer.core.theme.MediaTheme
+import com.example.taskplayer.presentation.main.onboarding.OnBoarding
+import com.example.taskplayer.presentation.main.splash.SplashScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        RetrofitClient.initialize(this)
         setContent {
             MediaTheme {
                 AppNavigation()
@@ -35,7 +38,7 @@ fun AppNavigation() {
     val navController = rememberNavController()
     val context = LocalContext.current
 //    requireNotNull(context) { "Context не может быть null!" }
-    val tokenManager = remember { TokenManager(context) }
+    val tokenManager = remember { UserSessionManager(context) }
 
     NavHost(
         navController = navController,
@@ -68,7 +71,6 @@ fun AppNavigation() {
                     tokenManager.setOnboardingShown()
                     navController.navigate("login")
                 },
-                tokenManager = tokenManager,
                 navController = navController
             )
         }
@@ -105,6 +107,7 @@ fun AppNavigation() {
                 path = path,
                 navController = navController,
                 tokenManager = tokenManager
+
             )
         }
 

@@ -1,7 +1,8 @@
 package com.example.taskplayer.data.remote
 
 
-import com.example.taskplayer.data.remote.auth.AuthRemoteSource
+import android.content.Context
+import com.example.taskplayer.data.local.UserSessionManager
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -17,23 +18,33 @@ object RetrofitClient {
         ignoreUnknownKeys = true
     }
 
+    private lateinit var tokenManager: UserSessionManager
+
+    fun initialize(context: Context) {
+        tokenManager = UserSessionManager(context)
+    }
+
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
+        .addInterceptor(AuthInterceptor(tokenManager))
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)
         .writeTimeout(15, TimeUnit.SECONDS)
         .build()
 
 
-    private val retrofit = Retrofit.Builder()
+    private val retrofit by lazy {
+        Retrofit.Builder()
         .baseUrl(URL)
         .client(okHttpClient)
         .addConverterFactory(Json.asConverterFactory("application/json;".toMediaType()))
         .build()
+    }
+
     val authService: AuthRemoteSource by lazy {
         retrofit.create(AuthRemoteSource::class.java)
     }
