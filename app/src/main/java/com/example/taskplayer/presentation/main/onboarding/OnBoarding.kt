@@ -24,89 +24,68 @@ import com.example.taskplayer.core.theme.MediaTheme
 
 @Composable
 fun OnBoarding(
-    onNavigateToLogin: () -> Unit,
-    navController: NavController
+    onLoginClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    //задник
-    Image(
-        painter = painterResource(R.drawable.forest_les),
-        contentDescription = null,
-        Modifier.fillMaxSize(),
-        contentScale = ContentScale.Crop
-    )
+    Box(modifier = modifier.fillMaxSize()) {
+        // Фоновое изображение
+        Image(
+            painter = painterResource(R.drawable.forest_les),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
 
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    )
-    {
-        Spacer(modifier = Modifier.height(130.dp))
-
-        Box(modifier = Modifier.size(width = 191.dp, height = 199.dp)) {
-            //лого
-            Image(
-                modifier = Modifier
-                    .matchParentSize(),
-                contentScale = ContentScale.Fit,
-                painter = painterResource(R.drawable.logo1),
-                contentDescription = null,
-            )
-        }
-        //Вступительный текст
         Column(
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Text(
-                text = "ПРИВЕТ",
-                style = MediaTheme.typography.alegreyaBoldStart,
-                color = MediaTheme.colors.text
-            )
-            Text(
-                text = "Наслаждайся отборочными.",
-                style = MediaTheme.typography.alegreyaSans20,
-                color = MediaTheme.colors.text
-            )
-            Text(
-                text = "Будь внимателен.",
-                style = MediaTheme.typography.alegreyaSans20,
-                color = MediaTheme.colors.text
-            )
-            Text(
-                text = "Делай хорошо.",
-                style = MediaTheme.typography.alegreyaSans20,
-                color = MediaTheme.colors.text
+            Spacer(modifier = Modifier.height(130.dp))
+
+            // Логотип
+            Image(
+                painter = painterResource(R.drawable.logo1),
+                contentDescription = null,
+                modifier = Modifier.size(width = 191.dp, height = 199.dp),
+                contentScale = ContentScale.Fit
             )
 
-        }
-
-        Spacer(modifier = Modifier.height(120.dp))
-        //кнопка и ссылка
-        AuthButton(
-            onClick = {
-                onNavigateToLogin()
+            // Текстовый блок
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = "ПРИВЕТ",
+                    style = MediaTheme.typography.alegreyaBoldStart
+                )
+                listOf(
+                    "Наслаждайся отборочными.",
+                    "Будь внимателен.",
+                    "Делай хорошо."
+                ).forEach { text ->
+                    Text(
+                        text = text,
+                        style = MediaTheme.typography.alegreyaSans20
+                    )
+                }
             }
-        ) {
-            Text("Войти в аккаунт", style = MediaTheme.typography.alegreyaSans25)
-        }
 
-        Row(modifier = Modifier.padding(top = 20.dp)) {
-            Text(
-                "Ещё нет аккаунта?",
-                style = MediaTheme.typography.alegreyaSans20400,
-                color = MediaTheme.colors.text
-            )
-            Text(
-                "Зарегестрируйтесь",
-                style = MediaTheme.typography.alegreyaSans20,
-                color = MediaTheme.colors.text
-            )
-        }
+            Spacer(modifier = Modifier.height(120.dp))
 
+            // Основная кнопка
+            AuthButton(
+                onClick = onLoginClick,
+                modifier = Modifier.padding(horizontal = 32.dp)
+            ) {
+                Text(
+                    text = "Войти в аккаунт",
+                    style = MediaTheme.typography.alegreyaSans25
+                )
+            }
+        }
     }
-
 }
 
 

@@ -41,7 +41,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SignInScreen(
-    navController: NavController,
     tokenManager: UserSessionManager,
     onNavigateToMain: () -> Unit
 ) {

@@ -17,7 +17,7 @@ fun SplashScreen(
     onNavigateToMain: () -> Unit,
     onNavigateToLogin: () -> Unit,
     onNavigateToOnboarding: () -> Unit,
-    tokenManager: UserSessionManager
+    tokenManager: UserSessionManager,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         // задник
@@ -35,24 +35,12 @@ fun SplashScreen(
         )
     }
     LaunchedEffect(Unit) {
-        try {
-            delay(2000)
-            Log.d("SplashScreen", "Checking login and onboarding status...")
+        delay(2000) // Задержка для сплэш-скрина
 
-            val isLoggedIn = tokenManager.isLoggedIn()
-            val isOnboardingShown = tokenManager.isOnboardingShown()
-
-            Log.d(
-                "SplashScreen",
-                "isLoggedIn = $isLoggedIn, isOnboardingShown = $isOnboardingShown"
-            )
-            when {
-                isLoggedIn -> onNavigateToMain()
-                isOnboardingShown -> onNavigateToLogin()
-                else -> onNavigateToOnboarding()
-            }
-        } catch (e: Exception) {
-            Log.e("SplashScreen", "Ошибка: ${e.message}", e)
+        when {
+            tokenManager.isLoggedIn() -> onNavigateToMain()
+            tokenManager.isOnboardingShown() -> onNavigateToLogin()
+            else -> onNavigateToOnboarding()
         }
 
     }

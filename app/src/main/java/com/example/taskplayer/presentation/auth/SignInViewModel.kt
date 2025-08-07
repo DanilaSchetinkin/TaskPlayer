@@ -14,7 +14,7 @@ class SignInViewModel(
     private val tokenManager: UserSessionManager,
     private val resources: ResourceProvider,
     private val authRepository: AuthRepository = AuthRepository(
-        RetrofitClient.authService
+        { RetrofitClient.authService }
     ),
 
     ) : ViewModel() {

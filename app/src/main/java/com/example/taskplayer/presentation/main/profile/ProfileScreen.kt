@@ -58,13 +58,28 @@ import java.io.FileOutputStream
 
 @Composable
 fun ProfileScreen(
-    tokenManager: UserSessionManager,
-    navController: NavController,
-    viewModel: ProfileViewModel = viewModel(factory = ProfileViewModelFactory(tokenManager))
+    onNavigateToPhoto: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    tokenManager: UserSessionManager
 ) {
+    val viewModel: ProfileViewModel = viewModel(
+        factory = ProfileViewModelFactory(tokenManager)
+    )
+
+    val context = LocalContext.current
+    val gallery by viewModel.gallery.collectAsState()
     val nickname = tokenManager.getNickName()
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            viewModel.addImage(context, uri)
+        }
+    }
+
     Scaffold(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         containerColor = DarkGreen,
         topBar = {
             Row(
@@ -92,118 +107,80 @@ fun ProfileScreen(
                     )
                 }
             }
-        },
-        bottomBar = {
-            BottomBar(
-                currentRoute = "profile",
-                onItemClick = { route ->
-                    navController.navigate(route) {
-                        popUpTo("profile") { inclusive = false }
-                        launchSingleTop = true
-                    }
-                })
-        }) { paddingValues ->
-        ProfileScreenContent(
-            paddingValues = paddingValues,
-            tokenManager = tokenManager,
-            nickname = nickname,
-            navController = navController,
-            viewModel = viewModel
-        )
-    }
-}
-
-@Composable
-fun ProfileScreenContent(
-    paddingValues: PaddingValues,
-    tokenManager: UserSessionManager,
-    nickname: String,
-    navController: NavController,
-    viewModel: ProfileViewModel
-) {
-    val context = LocalContext.current
-    val gallery by viewModel.gallery.collectAsState()
-    /*val coroutineScope = rememberCoroutineScope()*/
-
-    // Лаунчер для выбора изображения
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let {
-            viewModel.addImage(context, uri)
         }
-    }
-
-    Column(modifier = Modifier.padding(paddingValues)) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            MainAvatar(
-                tokenManager = tokenManager,
-                modifier = Modifier
-                    .size(150.dp)
-                    .clip(CircleShape)
-            )
-        }
-
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            Text(
-                text = nickname,
-                style = MediaTheme.typography.alegreyaBoldStart,
-                color = MediaTheme.colors.text)
-        }
-
-        Spacer(modifier = Modifier.size(16.dp))
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(8.dp)
-        ) {
-            items(gallery) { item ->
-                Box(
+    ) { paddingValues ->
+        Column(modifier = Modifier.padding(paddingValues)) {
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center) {
+                MainAvatar(
+                    tokenManager = tokenManager,
                     modifier = Modifier
-                        .clickable {
-                            navController.navigate("photo_screen/${item.path}")
-                        }
-                ) {
-                    var imageBitmap by remember { mutableStateOf<Bitmap?>(null) }
+                        .size(150.dp)
+                        .clip(CircleShape)
+                )
+            }
 
-                    LaunchedEffect(item.path) {
-                        withContext(Dispatchers.IO) {
-                            val bitmap = loadBitmapFromStorage(item.path)
-                            withContext(Dispatchers.Main) {
-                                imageBitmap = bitmap
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center) {
+                Text(
+                    text = nickname,
+                    style = MediaTheme.typography.alegreyaBoldStart,
+                    color = MediaTheme.colors.text
+                )
+            }
+
+            Spacer(modifier = Modifier.size(16.dp))
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(8.dp)
+            ) {
+                items(gallery) { item ->
+                    Box(
+                        modifier = Modifier
+                            .clickable {
+                                onNavigateToPhoto(item.path)
+                            }
+                    ) {
+                        var imageBitmap by remember { mutableStateOf<Bitmap?>(null) }
+
+                        LaunchedEffect(item.path) {
+                            withContext(Dispatchers.IO) {
+                                val bitmap = loadBitmapFromStorage(item.path)
+                                withContext(Dispatchers.Main) {
+                                    imageBitmap = bitmap
+                                }
                             }
                         }
-                    }
 
-                    imageBitmap?.let {
-                        Image(
-                            bitmap = it.asImageBitmap(),
-                            contentDescription = null,
-                            modifier = Modifier.size(180.dp))
+                        imageBitmap?.let {
+                            Image(
+                                bitmap = it.asImageBitmap(),
+                                contentDescription = null,
+                                modifier = Modifier.size(180.dp))
+                        }
                     }
                 }
-            }
 
-            item {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .size(180.dp)
-                        .clip(CircleShape)
-                        .clickable {
-                            galleryLauncher.launch("image/*")
-                        }
-                ) {
-                    Text(
-                        text = "+",
-                        style = MediaTheme.typography.alegreyaBoldStart,
-                        color = MediaTheme.colors.text)
+                item {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .size(180.dp)
+                            .clip(CircleShape)
+                            .clickable {
+                                galleryLauncher.launch("image/*")
+                            }
+                    ) {
+                        Text(
+                            text = "+",
+                            style = MediaTheme.typography.alegreyaBoldStart,
+                            color = MediaTheme.colors.text)
+                    }
                 }
             }
         }
     }
 }
-
-

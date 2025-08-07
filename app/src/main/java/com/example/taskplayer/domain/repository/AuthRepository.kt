@@ -4,12 +4,14 @@ import android.util.Log
 import com.example.taskplayer.data.remote.AuthRemoteSource
 import com.example.taskplayer.data.dto.AuthorizationRequest
 import com.example.taskplayer.data.dto.AuthorizationResponse
+import com.example.taskplayer.data.provider.ResourceProvider
 import com.example.taskplayer.domain.model.FeelingsResponse
 import com.example.taskplayer.domain.model.QuotesResponse
 
 class AuthRepository(
-    private val authService: AuthRemoteSource
+    private val authServiceProvider: () -> AuthRemoteSource
 ) {
+    private val authService: AuthRemoteSource get() = authServiceProvider()
 
 
     suspend fun login(email: String, password: String): AuthorizationResponse {
